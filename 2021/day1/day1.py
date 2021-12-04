@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+"""
+https://adventofcode.com/2020/day/1
+"""
+
 
 def load():
     with open("input.txt") as file:
@@ -11,29 +15,31 @@ def load():
         return numbers
 
 
-def day1_part1(lines):
+def day1_part1(data):
     increases = 0
-    last = lines[0]
-    for line in lines[1:]:
+    last = data[0]
+    for line in data[1:]:
         new = line
-        if new > last: increases += 1
+        if new > last:
+            increases += 1
         last = new
-    print("PART1: %d of %s lines increased" % (increases, len(lines)))
+    print("PART1: %d of %s data increased" % (increases, len(data)))
 
 
-def day1_part2(lines):
+def day1_part2(data):
     increases = 0
-    last = sum(lines[0:3])
+    last = sum(data[0:3])
 
-    for i in range(1, len(lines)):
-        new = sum(lines[i:i+3])
-        if new > last: increases += 1
+    for i in range(1, len(data)):
+        new = sum(data[i:i+3])
+        if new > last:
+            increases += 1
         last = new
-    print("PART2: %d of %s lines increased" % (increases, len(lines)))
+    print("PART2: %d of %s data increased" % (increases, len(data)))
 
 
 if __name__ == "__main__":
-    print("Avent of Code 2021 - Day 1")
-    lines = load()
-    day1_part1(lines)
-    day1_part2(lines)
+    print("Advent of Code 2021 - Day 1")
+    parsed = load()
+    day1_part1(parsed)
+    day1_part2(parsed)
