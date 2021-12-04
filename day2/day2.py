@@ -9,7 +9,10 @@ def load():
             direction = tmp[0]
             amount = int(tmp[1])
             movements.append({'dir':direction, 'amount':amount})
+
+        print("Loaded %s items" % (len(movements)))
         return movements
+
 
 def day2_part1(movements):
     depth = 0
@@ -26,7 +29,8 @@ def day2_part1(movements):
 
     # Answer is Horz * Depth
     answer = horizontal * depth
-    print("PART1: Horizontal: %d, Depth: %d,  Multi: %d" % (horizontal, depth, answer))
+    print("PART1: Horizontal: %d * Depth: %d => %d" % (horizontal, depth, answer))
+
 
 def day2_part2(movements):
     aim = 0
@@ -45,10 +49,11 @@ def day2_part2(movements):
 
     # Answer is Horz * Depth
     answer = horizontal * depth
-    print("PART2: Horizontal: %d, Depth: %d,  Multi: %d" % (horizontal, depth, answer))
+    print("PART2: Horizontal: %d * Depth: %d => %d" % (horizontal, depth, answer))
 
 
 if __name__ == "__main__":
+    print("Avent of Code 2021 - Day 2")
     movements = load()
     day2_part1(movements)
     day2_part2(movements)

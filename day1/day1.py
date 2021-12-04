@@ -6,7 +6,10 @@ def load():
         numbers = []
         for line in lines:
             numbers.append(int(line))
+
+        print("Loaded %s items" % (len(numbers)))
         return numbers
+
 
 def day1_part1(lines):
     increases = 0
@@ -16,6 +19,7 @@ def day1_part1(lines):
         if new > last: increases += 1
         last = new
     print("PART1: %d of %s lines increased" % (increases, len(lines)))
+
 
 def day1_part2(lines):
     increases = 0
@@ -27,7 +31,9 @@ def day1_part2(lines):
         last = new
     print("PART2: %d of %s lines increased" % (increases, len(lines)))
 
+
 if __name__ == "__main__":
+    print("Avent of Code 2021 - Day 1")
     lines = load()
     day1_part1(lines)
     day1_part2(lines)
