@@ -2,6 +2,7 @@
 """
 https://adventofcode.com/2021/day/
 """
+import itertools
 import os
 
 
@@ -27,12 +28,14 @@ def transpose(matrix):
 
 class BingoCard:
 
-    def __init__(self):
+    def __init__(self, index):
         self.rows = []
         self.matched = []
+        self.index = index
 
     def __str__(self):
-        formatted = ""
+        formatted = "===== Card %2d =====" % self.index
+        formatted += os.linesep
         for i, row in enumerate(self.rows):
             for j, value in enumerate(row):
                 match = "+" if self.matched[i][j] else "-"
@@ -78,11 +81,10 @@ def load():
 
         # Format read data
         pulls = lines[0].strip().split(',')
-        print(pulls)
         cards = []
         for line in lines[1:]:
             if line.strip() == '':
-                cards.append(BingoCard())
+                cards.append(BingoCard(len(cards)))
             else:
                 last = len(cards) - 1
                 new_row = line.strip().split()
@@ -93,10 +95,6 @@ def load():
 
 
 def part1(pulls, cards):
-    for card in cards:
-        print(card)
-    print(pulls)
-
     winner = None
     score = None
     for pull in pulls:
@@ -110,13 +108,38 @@ def part1(pulls, cards):
             score = card.score(pull)
             break
 
-    print("PART1: Winner Score:", score)
     print(winner)
+    print("PART1: Winner Score:", score)
+
+
+def filter_bingo(card):
+    return card.has_bingo()
 
 
 def part2(pulls, cards):
+    """
+    NOTE: The first winner was already determined in PART 1, so some pulls are already marked
+    :param pulls:
+    :param cards:
+    :return:
+    """
+    remaining = list(cards)
+    for i, pull in enumerate(pulls):
+        for card in remaining:
+            card.mark(pull)
 
-    print("PART2: ")
+        # Filter list to only bingo cards that have not won
+        remaining[:] = itertools.filterfalse(filter_bingo, remaining)
+        if len(remaining) == 1:
+            # continue until the last card "wins"
+            loser = remaining[0]
+            for pull2 in pulls[i:]:
+                loser.mark(pull2)
+                if loser.has_bingo():
+                    score = loser.score(pull2)
+                    print(loser)
+                    print("PART2: Loser Score:", score)
+                    return
 
 
 if __name__ == "__main__":
