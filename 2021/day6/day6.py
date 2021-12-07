@@ -2,35 +2,38 @@
 """
 https://adventofcode.com/2021/day/6
 """
-import numpy as np
 
 
 class Fish:
-    def __init__(self, counters):
-        self.counters = np.array(counters)
+    """
+    Fish is an array of the number of fish currently at that counter level
+    """
+
+    def __init__(self, initial):
         self.days = 0
+        self.fish = [0 for i in range(9)]
+        for value in initial:
+            self.fish[value] += 1
 
     def increment(self, days):
         for day in range(days):
-            # add number born, after doing decrement
             self.days += 1
-            born = 0
-            for i, counter in enumerate(self.counters):
-                if counter == 0:
-                    self.counters[i] = 6
-                    born += 1
-                else:
-                    self.counters[i] = self.counters[i] - 1
-            for i in range(born):
-                self.counters = np.append(self.counters, 8)
-            print("Day %d born %d = %d... " % (self.days, born, len(self.counters)), end="\r")
 
-    def get_total(self):
-        return len(self.counters)
+            # Store the number of fish at 0 (will goto to 6 and spawn new fish at 8)
+            zeros = self.fish[0]
+            for i in range(8):
+                self.fish[i] = self.fish[i+1]
+            self.fish[6] += zeros
+            self.fish[8] = zeros
+
+            print("Day %d born %d = %d... " % (self.days, zeros, self.total()), end="\r")
+
+    def total(self):
+        return sum(self.fish)
 
 
 def load():
-    with open("example.txt") as file:
+    with open("input.txt") as file:
         lines = file.readlines()
 
         # Format read data
@@ -44,9 +47,9 @@ def load():
 def run(data):
     fish = Fish(data)
     fish.increment(80)
-    print("PART1: Total Lantern Fish", fish.get_total())
+    print("PART1: Lantern Fish after  80:", fish.total())
     fish.increment(256 - 80)
-    print("PART2: Total Lantern Fish", fish.get_total())
+    print("PART2: Lantern Fish after 256:", fish.total())
 
 
 if __name__ == "__main__":
