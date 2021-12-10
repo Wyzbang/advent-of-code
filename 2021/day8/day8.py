@@ -2,18 +2,17 @@
 """
 https://adventofcode.com/2021/day/8
 """
-
-
-def split(word):
-    return [char for char in word]
+from utils.converters import split
 
 
 def has_all(l1, l2):
     """
 
     :param l1: string to check
-    :param l2: values to check againsts
-    :return:
+    :param l2: values to check against
+    :return: True if all characters in l2 are in l1
+    eg.   l1: "123" l2: "12" => True
+    eg.  l1: "123" l2: "14" => False
     """
     for c in l2:
         if c not in l1:
