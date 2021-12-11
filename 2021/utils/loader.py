@@ -5,6 +5,14 @@ Common data loader functions
 from utils.converters import split_digits
 
 
+def load_strings(filepath):
+    with open(filepath) as file:
+        lines = file.readlines()
+
+    data = [line.strip() for line in lines]
+    return data
+
+
 def load_grid_digits(filepath):
     """
     Load a grid (2d list) of integer digits
