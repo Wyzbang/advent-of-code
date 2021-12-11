@@ -11,18 +11,3 @@ def load_strings(filepath):
 
     data = [line.strip() for line in lines]
     return data
-
-
-def load_grid_digits(filepath):
-    """
-    Load a grid (2d list) of integer digits
-    :param filepath:
-    :return:
-    """
-    with open(filepath) as file:
-        lines = file.readlines()
-        data = []
-        # Format read data
-        for line in lines:
-            data.append(split_digits(line.strip()))
-        return data

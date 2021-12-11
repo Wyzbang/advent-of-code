@@ -2,34 +2,15 @@
 """
 https://adventofcode.com/2021/day/9
 """
-import copy
 from utils.init import gen_grid
-from utils.loader import load_grid_digits
+from utils.grid import Grid
 
 
-class Grid:
+class Day9Grid(Grid):
 
-    def __init__(self, data):
-        self.grid = data
-        self.width = len(data[0])
-        self.height = len(data)
-
-    def __str__(self):
-        return "%d" % len(self.grid)
-
-    def adjacent(self, i, j):
-        a = []
-
-        if i > 0:
-            a.append((i-1, j))
-        if i < self.height - 1:
-            a.append((i+1, j))
-        if j > 0:
-            a.append((i, j-1))
-        if j < self.width - 1:
-            a.append((i, j+1))
-
-        return a
+    def __init__(self, filepath):
+        super().__init__()
+        self.load_digits(filepath)
 
     def find_low(self):
         low = []
@@ -88,7 +69,7 @@ class Grid:
 
 def run():
     print("Advent of Code 2021 - Day 9")
-    grid = Grid(load_grid_digits("input.txt"))
+    grid = Day9Grid("input.txt")
     print("PART1: Low   = ", grid.find_low())
     print("PART2: Basin = ", grid.find_basins())
 
