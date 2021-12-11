@@ -7,9 +7,8 @@ from utils.grid import Grid
 
 class Day11Grid(Grid):
 
-    def __init__(self, filepath):
-        super().__init__()
-        self.load_digits(filepath)
+    def __init__(self, data):
+        super().__init__(data)
         self.has_flashed = []     # This step only
         self.flashes = 0
         self.steps = 0
@@ -52,7 +51,7 @@ class Day11Grid(Grid):
 
 def run():
     print("Advent of Code 2021 - Day 11")
-    grid = Day11Grid("input.txt")
+    grid = Day11Grid.load_digits("input.txt")
 
     for i in range(100):
         grid.step()

@@ -7,39 +7,37 @@ from utils.converters import split_digits
 
 class Grid:
 
-    def __init__(self):
-        self.grid = []
-        self.width = None
-        self.height = 0
+    def __init__(self, data):
+        self.grid = data
+        self.width = len(data[0])
+        self.height = len(data)
+
+        for row in data:
+            if len(row) != self.width:
+                raise RuntimeError("Array size %d does not match current width %d" % (len(row), self.width))
+
+    @classmethod
+    def initialize(cls, width, height, value):
+        data = [[value for i in range(width)] for j in range(height)]
+        return cls(data)
+
+    @classmethod
+    def load_digits(cls, filepath):
+        with open(filepath) as file:
+            lines = file.readlines()
+            # Format read data
+            digits = []
+            for line in lines:
+                tmp = split_digits(line.strip())
+                digits.append(tmp)
+
+            return cls(digits)
 
     def __getitem__(self, item):
         return self.grid[item]
 
     def __str__(self):
         return "Grid (%dx%d)" % (self.width, self.height)
-
-    def initialize(self, width, height, value):
-        """
-        Generate a grid (list of lists) of size WxH with each cell set to 'value'
-        """
-        self.grid = [[value for i in range(width)] for j in range(height)]
-
-    def append(self, array):
-        size = len(array)
-        if self.width is None:
-            self.width = size
-        elif self.width != size:
-            raise RuntimeError("Array size %d does not match current width %d" % (size, self.width))
-        self.grid.append(array)
-        self.height += 1
-
-    def load_digits(self, filepath):
-        with open(filepath) as file:
-            lines = file.readlines()
-            # Format read data
-            for line in lines:
-                tmp = split_digits(line.strip())
-                self.append(tmp)
 
     def adjacent_all(self, i, j):
         """

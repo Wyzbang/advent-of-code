@@ -2,15 +2,13 @@
 """
 https://adventofcode.com/2021/day/9
 """
-from utils.init import gen_grid
 from utils.grid import Grid
 
 
 class Day9Grid(Grid):
 
-    def __init__(self, filepath):
-        super().__init__()
-        self.load_digits(filepath)
+    def __init__(self, data):
+        super().__init__(data)
 
     def find_low(self):
         low = []
@@ -53,7 +51,7 @@ class Day9Grid(Grid):
     def find_basins(self):
         current = None
         basins = []
-        processed = gen_grid(self.width, self.height, False)
+        processed = Grid.initialize(self.width, self.height, False)
         for i, row in enumerate(self.grid):
             for j, value in enumerate(row):
                 self.check(processed, basins, current, i, j)
@@ -69,7 +67,7 @@ class Day9Grid(Grid):
 
 def run():
     print("Advent of Code 2021 - Day 9")
-    grid = Day9Grid("input.txt")
+    grid = Day9Grid.load_digits("input.txt")
     print("PART1: Low   = ", grid.find_low())
     print("PART2: Basin = ", grid.find_basins())
 

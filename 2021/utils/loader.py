@@ -2,7 +2,6 @@
 """
 Common data loader functions
 """
-from utils.converters import split_digits
 
 
 def load_strings(filepath):
