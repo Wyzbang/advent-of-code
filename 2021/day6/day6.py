@@ -2,6 +2,7 @@
 """
 https://adventofcode.com/2021/day/6
 """
+from utils.loader import load_ints_csv
 
 
 class Fish:
@@ -32,19 +33,9 @@ class Fish:
         return sum(self.fish)
 
 
-def load():
-    with open("input.txt") as file:
-        lines = file.readlines()
-
-        # Format read data
-        counters = []
-        for count in lines[0].split(','):
-            counters.append(int(count))
-
-        return counters
-
-
-def run(data):
+def run():
+    print("Advent of Code 2021 - Day 6")
+    data = load_ints_csv("input.txt")
     fish = Fish(data)
     fish.increment(80)
     print("PART1: Lantern Fish after  80:", fish.total())
@@ -53,7 +44,4 @@ def run(data):
 
 
 if __name__ == "__main__":
-    print("Advent of Code 2021 - Day 6")
-    parsed = load()
-    run(parsed)
-
+    run()

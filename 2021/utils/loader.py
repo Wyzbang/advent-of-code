@@ -4,9 +4,28 @@ Common data loader functions
 """
 
 
+def load_ints_csv(filepath):
+    """
+    Load a from file with single line of comma seperated ints
+    """
+    with open(filepath) as file:
+        lines = file.readlines()
+        if len(lines) != 1:
+            raise RuntimeError("Unexpected lines in file")
+
+        # Convert line to list of integers
+        values = lines[0].split(',')
+        integers = [int(x) for x in values]
+        return integers
+
+
 def load_strings(filepath):
+    """
+    Load from file with 1 string per line
+    """
     with open(filepath) as file:
         lines = file.readlines()
 
-    data = [line.strip() for line in lines]
-    return data
+        # format the strings
+        strings = [line.strip() for line in lines]
+        return strings

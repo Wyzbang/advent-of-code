@@ -2,8 +2,10 @@
 """
 https://adventofcode.com/2021/day/7
 """
+from utils.loader import load_ints_csv
 
 stored = {}
+
 
 def consumption(delta):
     """
@@ -20,7 +22,7 @@ def consumption(delta):
     return used
 
 
-class Carbs:
+class Crab:
 
     def __init__(self, positions):
         self.positions = positions
@@ -49,17 +51,10 @@ class Carbs:
         return fuel
 
 
-def load(filename):
-    with open(filename) as file:
-        lines = file.readlines()
-
-        # Format read data
-        positions = [int(x) for x in lines[0].split(',')]
-        return positions
-
-
-def run(data):
-    carbs = Carbs(data)
+def run():
+    print("Advent of Code 2021 - Day 7")
+    data = load_ints_csv("input.txt")
+    carbs = Crab(data)
     fuel1 = None
     fuel2 = None
     final1 = None
@@ -82,6 +77,4 @@ def run(data):
 
 
 if __name__ == "__main__":
-    print("Advent of Code 2021 - Day 7")
-    parsed = load("input.txt")
-    run(parsed)
+    run()
