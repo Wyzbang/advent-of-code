@@ -33,6 +33,12 @@ class Grid:
 
             return cls(digits)
 
+    def get(self, x, y):
+        return self.grid[y][x]
+
+    def set(self, x, y, value):
+        self.grid[y][x] = value
+
     def __getitem__(self, item):
         return self.grid[item]
 
@@ -80,3 +86,27 @@ class Grid:
             cells.append((i, j+1))
 
         return cells
+
+    def count(self, check):
+        number = 0
+        for row in self.grid:
+            for value in row:
+                if check == value:
+                    number += 1
+        return number
+
+    def dump(self, true="#", false="."):
+        """
+        Dumps grid
+        :param true: display for a True value
+        :param false: display for a False value
+        :return:
+        """
+        for i, row in enumerate(self.grid):
+            print("%3d " % i, end="")
+            for value in row:
+                if type(value) == bool:
+                    print(true if value else false, end="")
+                else:
+                    print(value, end="")
+            print()

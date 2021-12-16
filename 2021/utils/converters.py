@@ -11,6 +11,11 @@ def split(word):
     return [char for char in word]
 
 
+def split_point(word):
+    temp = word.strip().split(',')
+    return tuple(int(value) for value in temp)
+
+
 def split_digits(word):
     """
     Split string into list of integers

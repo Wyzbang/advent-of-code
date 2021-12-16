@@ -4,6 +4,12 @@ Common data loader functions
 """
 
 
+def load_lines(filepath):
+    with open(filepath) as file:
+        lines = file.readlines()
+    return lines
+
+
 def load_ints_csv(filepath):
     """
     Load a from file with single line of comma seperated ints
