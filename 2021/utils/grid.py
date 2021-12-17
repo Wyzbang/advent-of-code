@@ -39,6 +39,9 @@ class Grid:
     def set(self, x, y, value):
         self.grid[y][x] = value
 
+    def max(self):
+        return tuple([self.height - 1, self.width - 1])
+
     def __getitem__(self, item):
         return self.grid[item]
 
