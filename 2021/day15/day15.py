@@ -8,6 +8,12 @@ import sys
 from utils.grid import Grid
 
 
+def increment(value, j):
+    amount = (j + 1) + value
+    value = amount if amount <= 9 else amount - 9
+    return value
+
+
 class Risk(Grid):
 
     def __init__(self, data):
@@ -62,7 +68,7 @@ class Risk(Grid):
         return node
 
     def visit(self, i, j):
-        print("Visiting %d, %d..." % (i, j), end='\r')
+        print("Remaining %d..." % len(self.unvisited), end='\r')
         for n, m in self.unvisited_adjacent(i, j):
             new_score = self.scores[i][j] + self[n][m]
             if new_score < self.scores[n][m]:
@@ -74,6 +80,9 @@ class Risk(Grid):
         Using Dijkstra's algorithm to find path
         :return:
         """
+        self.unvisited = []
+        self.scores = Grid.initialize(self.width, self.height, sys.maxsize)
+
         for i in range(self.height):
             for j in range(self.width):
                 self.unvisited.append((i, j))
@@ -86,15 +95,38 @@ class Risk(Grid):
         f, g = self.max()
         return self.scores[f][g]
 
+    def expand(self):
+        # widen
+        for i, row in enumerate(self.grid):
+            new_row = copy.copy(self.grid[i])
+            for j in range(4):
+                for value in row:
+                    new_value = increment(value, j)
+                    new_row.append(new_value)
+            self.grid[i] = new_row
+
+        # heighten
+        new_rows = []
+        for i in range(4):
+            for j, row in enumerate(self.grid):
+                new_row = []
+                for value in row:
+                    new_row.append(increment(value, i))
+                new_rows.append(new_row)
+        self.grid.extend(new_rows)
+
 
 def run():
     print("Advent of Code 2021 - Day 15")
-    risk = Risk.load_digits("example.txt")
+    risk = Risk.load_digits("input.txt")
+
     #score, path = risk.find_path()
-    score = risk.dijkstra()
-    # TODO:
-    print("PART1: %d" % (score))
-    print("PART2: ")
+    answer1 = risk.dijkstra()
+    print("PART1: %d" % answer1)
+
+    risk.expand()
+    answer2 = risk.dijkstra()
+    print("PART2: %d" % answer2)
 
 
 if __name__ == "__main__":

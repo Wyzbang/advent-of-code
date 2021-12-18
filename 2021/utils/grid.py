@@ -9,8 +9,6 @@ class Grid:
 
     def __init__(self, data):
         self.grid = data
-        self.width = len(data[0])
-        self.height = len(data)
 
         for row in data:
             if len(row) != self.width:
@@ -32,6 +30,14 @@ class Grid:
                 digits.append(tmp)
 
             return cls(digits)
+
+    @property
+    def width(self):
+        return len(self.grid[0])
+
+    @property
+    def height(self):
+        return len(self.grid)
 
     def get(self, x, y):
         return self.grid[y][x]
