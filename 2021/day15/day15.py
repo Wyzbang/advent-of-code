@@ -4,6 +4,7 @@ https://adventofcode.com/2021/day/15
 """
 import copy
 import sys
+import time
 
 from utils.grid import Grid
 
@@ -25,7 +26,18 @@ class Risk(Grid):
 
         # Dijkstra
         self.unvisited = []
+        self.unvisited_scored = []
         self.scores = Grid.initialize(self.width, self.height, sys.maxsize)
+
+        # Performance
+        self._start = 0
+
+    def start(self):
+        self._start = time.perf_counter()
+
+    def elapsed(self):
+        elapsed = time.perf_counter() - self._start
+        return "%0.3fs" % elapsed
 
     def find(self, i, j, path, score):
         print("%d" % (self.shortest_len if self.shortest_len is not None else 0), end='\r')
@@ -61,19 +73,29 @@ class Risk(Grid):
     def find_lowest(self):
         lowest = sys.maxsize
         node = self.unvisited[0]
-        for i, j in self.unvisited:
+        for i, j in self.unvisited_scored:
             if self.scores[i][j] < lowest:
                 lowest = self.scores[i][j]
                 node = (i, j)
         return node
 
+    def score(self, i, j, score):
+        self.scores[i][j] = score
+        node = (i, j)
+        if node not in self.unvisited_scored:
+            self.unvisited_scored.append(node)
+
+    def mark_visited(self, i, j):
+        self.unvisited_scored.remove((i, j))
+        self.unvisited.remove((i, j))
+
     def visit(self, i, j):
-        print("Remaining %d..." % len(self.unvisited), end='\r')
+        print("Remaining %d (%s)..." % (len(self.unvisited), self.elapsed()), end='\r')
         for n, m in self.unvisited_adjacent(i, j):
             new_score = self.scores[i][j] + self[n][m]
             if new_score < self.scores[n][m]:
-                self.scores[n][m] = new_score
-        self.unvisited.remove((i, j))
+                self.score(n, m, new_score)
+        self.mark_visited(i, j)
 
     def dijkstra(self):
         """
@@ -81,17 +103,26 @@ class Risk(Grid):
         :return:
         """
         self.unvisited = []
+
+        # secondary list of partially scored but unvisited nodes, to speed up algorithm
+        # so not evey node needs to be checked for "lowest" for next visit
+        self.unvisited_scored = []
+
         self.scores = Grid.initialize(self.width, self.height, sys.maxsize)
 
         for i in range(self.height):
             for j in range(self.width):
                 self.unvisited.append((i, j))
 
-        self.scores[0][0] = 0
+        # Initialize first node score
+        tic = time.perf_counter()
+        self.score(0, 0, 0)
         while len(self.unvisited):
             lowest = self.find_lowest()
             self.visit(*lowest)
 
+        toc = time.perf_counter()
+        print("Dijkstra completed in %s" % (self.elapsed()))
         f, g = self.max()
         return self.scores[f][g]
 
