@@ -24,16 +24,21 @@ def load_bits(filepath):
 
 
 class PacketType(Enum):
-    OPA = 3
+    SUM = 0
+    PRODUCT = 1
+    MIN = 2
+    MAX = 3
     LITERAL = 4
-    OPB = 6
+    GREATER = 5
+    LESS = 6
+    EQUAL = 7
 
 
 class Packet:
 
     def __init__(self, version, ptype):
-        self.__version = version
-        self.__ptype = ptype
+        self.version = version
+        self.ptype = ptype
 
         # Literal Attributes
         self.__value = None
@@ -63,9 +68,9 @@ class Packet:
     def ptype(self, ptype):
         if type(ptype) is bitarray:
             converted = ba2int(ptype)
-            self.__ptype = converted
+            self.__ptype = PacketType(converted)
         else:
-            self.__ptype = ptype
+            self.__ptype = PacketType(ptype)
 
     @property
     def value(self):
@@ -94,12 +99,37 @@ class Packet:
         return new
 
     def dump(self, prefix=""):
-        if self.ptype == PacketType.LITERAL.value:
-            print("%sL %d %d = %d" % (prefix, self.version, self.ptype, self.value))
+        if self.ptype == PacketType.LITERAL:
+            print("%sL %d %s = %d" % (prefix, self.version, self.ptype.name, self.value))
         else:
-            print("%sO %d %d %d%s" % (prefix, self.version, self.ptype, self.length, self.lengthID))
+            print("%sO %d %s %d%s" % (prefix, self.version, self.ptype.name, self.length, self.lengthID))
         for packet in self.packets:
             packet.dump(prefix + "-")
+
+    def compute(self):
+        values = []
+        for packet in self.packets:
+            values.append(packet.compute())
+
+        if self.ptype == PacketType.SUM:
+            return sum(values)
+        elif self.ptype == PacketType.PRODUCT:
+            product = 1
+            for value in values:
+                product *= value
+            return product
+        elif self.ptype == PacketType.MIN:
+            return min(values)
+        elif self.ptype == PacketType.MAX:
+            return max(values)
+        elif self.ptype == PacketType.LITERAL:
+            return self.value
+        elif self.ptype == PacketType.GREATER:
+            return 1 if values[0] > values[1] else 0
+        elif self.ptype == PacketType.LESS:
+            return 1 if values[0] < values[1] else 0
+        elif self.ptype == PacketType.EQUAL:
+            return 1 if values[0] == values[1] else 0
 
 
 def pad(index, sub_packet):
@@ -194,16 +224,14 @@ def run():
     bits = load_bits("input.txt")
     i, packets = parse(bits)
 
-    for packet in packets:
-        packet.dump()
-
     answer1 = sum_version(packets)
+    print("PART1: Version Sum =", answer1)
 
-    # TODO: Part 2
-    answer2 = 0
+    # NOTE: Part 2, there should be 1 nested packet
+    assert len(packets) == 1
+    answer2 = packets[0].compute()
 
-    print("PART1: ", answer1)
-    print("PART2: ", answer2)
+    print("PART2: Computation =", answer2)
 
 
 if __name__ == "__main__":

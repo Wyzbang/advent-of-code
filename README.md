@@ -78,7 +78,17 @@ PART2: After 40 steps:  2516901104210
 ###Day 15
 Recursive algorith ok for example but not input
 Dijkstra algorith ok for example and port 1, but not part 2
-
+Changed dijkstra to improve performance of finding next lowest node.
+Which improved performance but still to ~40 min
 ```
-PART1: 626
+PART1: 626 (5.824s)
+PART2: 2966 (2380.454s)
+```
+
+###Day 16
+Took a while to rework algorithm to deal with padding, that only
+appeared in root packets, when the input only had 1 root packet
+```
+PART1: Version Sum = 925
+PART2: Computation = 342997120375
 ```
