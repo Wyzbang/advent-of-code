@@ -92,3 +92,9 @@ appeared in root packets, when the input only had 1 root packet
 PART1: Version Sum = 925
 PART2: Computation = 342997120375
 ```
+
+###Day 17
+For part 1, got range for test from web, but rest was by me
+```
+PART1: Highest = 33670
+```
