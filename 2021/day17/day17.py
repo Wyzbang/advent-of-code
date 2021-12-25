@@ -2,7 +2,8 @@
 """
 https://adventofcode.com/2021/day/17
 """
-import math
+from utils.converters import split_point
+from utils.loader import load_lines
 
 
 class Target:
@@ -25,7 +26,7 @@ class Target:
         :param y: current y position
         :return: boolean
         """
-        return x > self.x2 or y < self.y2
+        return x > self.x2 or y < self.y1
 
 
 class Probe:
@@ -53,12 +54,12 @@ class Probe:
     def location(self):
         return self.x, self.y
 
-    def find_highest(self, target):
+    def find_hit(self, target):
         self.x, self.y = 0, 0
 
         highest = 0
         hit = False
-        while not target.beyond(*self.location):
+        while not hit and not target.beyond(*self.location):
             self.step()
             highest = self.y if self.y > highest else highest
             hit = target.hit(*self.location)
@@ -76,20 +77,32 @@ def part1math(target):
     return answer
 
 
-def part1(target):
+def answers(target):
     max = 0
-    xmin = int(math.sqrt(target.x1))
-    xmax = target.x2
+    xmax = target.x2 + 1
     ymin = target.y1
     ymax = abs(target.y1) + 1
 
-    for vx in range(xmin, xmax):
+    hits = []
+    for vx in range(xmax):
         for vy in range(ymin, ymax):
             probe = Probe(vx, vy)
-            hit, highest = probe.find_highest(target)
-            if hit and highest > max:
-                max = highest
-    return max
+            hit, highest = probe.find_hit(target)
+            if hit:
+                hits.append((vx, vy))
+                if highest > max:
+                    max = highest
+
+    return max, hits
+
+
+def load():
+    points = []
+    lines = load_lines("example_hits.txt")
+    for line in lines:
+         points.append(split_point(line))
+
+    return set(points)
 
 
 def run():
@@ -99,11 +112,11 @@ def run():
     target = Target(25, 67, -260, -200)
 
     answer1m = part1math(target)
-    answer1c = part1(target)
-    assert answer1m == answer1c
+    answer1, answer2 = answers(target)
+    assert answer1m == answer1
 
-    print("PART1: Highest =", answer1c)
-    print("PART2: ")
+    print("PART1: Highest =", answer1)
+    print("PART2: Valid   =", len(answer2))
 
 
 if __name__ == "__main__":

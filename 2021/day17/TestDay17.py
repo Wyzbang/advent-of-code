@@ -58,7 +58,7 @@ class TestDay17(unittest.TestCase):
     def __highest1(self, vx, vy, n):
         example = Target(20, 30, -10, -5)
         probe = Probe(vx, vy)
-        hit, highest = probe.find_highest(example)
+        hit, highest = probe.find_hit(example)
 
         self.assertEqual(n, highest)
         self.assertTrue(hit)
@@ -75,7 +75,7 @@ class TestDay17(unittest.TestCase):
     def test_highest4(self):
         example = Target(20, 30, -10, -5)
         probe = Probe(17, -4)
-        hit, highest = probe.find_highest(example)
+        hit, highest = probe.find_hit(example)
 
         self.assertEqual(0, highest)
         self.assertFalse(hit)

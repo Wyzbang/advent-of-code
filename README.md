@@ -94,7 +94,11 @@ PART2: Computation = 342997120375
 ```
 
 ###Day 17
-For part 1, got range for test from web, but rest was by me
+For part 1, got range for test from web, but rest was by me.
+Part 1 got lucky as the check for being beyond the target was
+not correct, which caused part 2 to be missing some valid starting
+values for multiple reasons.
 ```
 PART1: Highest = 33670
+PART2: Valid   = 4903
 ```
