@@ -108,6 +108,25 @@ class Snail:
 
         return False
 
+    def reduce(self):
+        exploded = True
+        split = True
+        while exploded or split:
+            a, b, exploded = self.explode()
+            if not exploded:
+                split = self.split()
+
+    def magnitude(self, pairs=None):
+        pairs = self.number if pairs is None else pairs
+
+        if self.is_regular(pairs):
+            return 3*pairs[0] + 2*pairs[1]
+        elif type(pairs) is list:
+            for i, pair in enumerate(pairs):
+                pairs[i] = self.magnitude(pair)
+
+        return self.magnitude(pairs)
+
 
 def load(filepath):
     numbers = []
@@ -119,12 +138,24 @@ def load(filepath):
     return numbers
 
 
+def part1(numbers):
+    current = Snail([])
+    for number in numbers:
+        current += number
+        current.reduce()
+
+    answer = current.magnitude()
+    return answer
+
+
 def run():
     print("Advent of Code 2021 - Day 18")
-    numbers = load("input.txt")
+    numbers = load("example.txt")
 
     # TODO:
-    print("PART1: ")
+    answer1 = part1(numbers)
+
+    print("PART1: ", answer1)
     print("PART2: ")
 
 
