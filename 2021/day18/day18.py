@@ -42,7 +42,6 @@ class Snail:
         l = 0
         return prev, next
 
-
     @staticmethod
     def split(l, i):
         half = l[i] / 2
@@ -51,28 +50,46 @@ class Snail:
 
         l[i] = [a, b]
 
-    def explode(self, pairs=None, depth=0):
+    def explode(self, pairs=None, depth=0, exploded=False):
         pairs = self.number if pairs is None else pairs
         prev_inc = 0
         next_inc = 0
-        exploded = 0
 
-        for i, node in enumerate(pairs):
-            if i == 1:
-                pairs[0] += prev_inc
+        for i, pair in enumerate(pairs):
 
-            if type(node) is int:
-                pairs[i] += next_inc
+            if type(pair) is list and type(pair[0]) is int:
+                pair[0] += next_inc
                 next_inc = 0
 
-            elif self.is_regular(node) and depth >= 3:
-                prev_inc = node[0]
-                next_inc = node[1]
-                pairs[i] = 0
-                exploded += 1
+            if type(pair) is int:
+                pass
+
+            elif not exploded and self.is_regular(pair) and depth >= 3:
+                # if this is first of the pair, increment the next and return prev
+                # or vice-versa
+                if i == 0:
+                    prev_inc = pair[0]
+                    pairs[1] += pair[1]
+                    next_inc = 0
+                    pairs[0] = 0
+                else:
+                    pairs[0] += pair[0]
+                    prev_inc = 0
+                    next_inc = pair[1]
+                    pairs[1] = 0
+
+                return prev_inc, next_inc, True
 
             else:
-                prev_inc, next_inc, exploded = self.explode(node, depth+1)
+                prev_inc, next_inc, exploded = self.explode(pair, depth+1, exploded)
+
+                if type(pairs[0]) is int and i == 1:
+                    pairs[0] += prev_inc
+                    prev_inc = 0
+
+                if type(pairs[1]) is int and i == 0:
+                    pairs[1] += next_inc
+                    next_inc = 0
 
         return prev_inc, next_inc, exploded
 
@@ -90,9 +107,6 @@ class Snail:
                     return True
 
         return False
-
-
-
 
 
 def load(filepath):
