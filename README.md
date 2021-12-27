@@ -102,3 +102,6 @@ values for multiple reasons.
 PART1: Highest = 33670
 PART2: Valid   = 4903
 ```
+
+###Day 18
+For part 1, having issue getting explode to correctly update node before and after the exploded node
