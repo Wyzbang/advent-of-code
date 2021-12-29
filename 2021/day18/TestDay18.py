@@ -26,7 +26,10 @@ class TestDay18(unittest.TestCase):
         actual = Snail(before)
         expected = Snail(after)
 
+        print("START  :", actual)
         actual.explode()
+        print("EXPLODE:", actual)
+        print("EXPECT :", expected)
         self.assertEqual(expected, actual)
 
     def test_explode1(self):
@@ -54,6 +57,11 @@ class TestDay18(unittest.TestCase):
         b = [[3,[2,[8,0]]],[9,[5,[7,0]]]]
         self.__test_explode(a, b)
 
+    def test_explode6(self):
+        a = [[[[[4, 3], 4], 4], [7, [[8, 4], 9]]], [1, 1]]
+        b = [[[[0, 7], 4], [7, [[8, 4], 9]]], [1, 1]]
+        self.__test_explode(a,b)
+
     def __test_split(self, before, after):
         actual = Snail(before)
         expected = Snail(after)
@@ -78,6 +86,35 @@ class TestDay18(unittest.TestCase):
         a = [[[[0,7],4],[[7,8],[0,[6,7]]]],[1,1]]
         was_split = self.__test_split(a, a)
         self.assertFalse(was_split)
+
+    def __test_reduce(self, before, after):
+        actual = Snail(before)
+        expected = Snail(after)
+
+        actual.reduce()
+        self.assertEqual(expected, actual)
+
+    def test_reduce(self):
+        a = [[[[[4,3],4],4],[7,[[8,4],9]]],[1,1]]
+        b = [[[[0,7],4],[[7,8],[6,0]]],[8,1]]
+        self.__test_reduce(a, b)
+
+    def test_reduce2(self):
+        a = [[[[[1, 1], [2, 2]], [3, 3]], [4, 4]], [5, 5]]
+        b = [[[[3,0],[5,3]],[4,4]],[5,5]]
+        self.__test_reduce(a, b)
+
+    def test_reduce3(self):
+        # [[[[[1, 1], [2, 2]], [3, 3]], [4, 4]], [5, 5]] + [6,6]
+        a = [[[[0, [5, 3]], [4, 4]], [5, 5]], [6, 6]]
+        b = [[[[5,0],[7,4]],[5,5]],[6,6]]
+        self.__test_reduce(a, b)
+
+    def test_magnitude(self):
+        a = Snail([1,9])
+        self.assertEqual(21, a.magnitude())
+        b = Snail([[9,1],[1,9]])
+        self.assertEqual(129, b.magnitude())
 
 
 if __name__ == '__main__':
