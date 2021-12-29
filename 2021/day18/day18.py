@@ -18,6 +18,10 @@ class Snail:
         else:
             raise RuntimeError
 
+        self.exploded = False
+        self.next_inc = 0
+        self.prev_inc = 0
+
     def __add__(self, other):
         new = [self.number, other.number]
         return Snail(new)
@@ -35,62 +39,69 @@ class Snail:
     def is_regular(pair):
         return type(pair) is list and type(pair[0]) is int and type(pair[1]) is int
 
-    def explode(self, pairs=None, depth=0, exploded=False, prev_inc=0, next_inc=0):
-        pairs = self.number if pairs is None else pairs
+    def explode(self):
+        self.exploded = False
+        self.next_inc = 0
+        self.prev_inc = 0
+        self.__explode(self.number)
+        return self.exploded
+
+    def __explode(self, pairs=None, depth=0):
 
         for i, pair in enumerate(pairs):
 
             if type(pair) is list and type(pair[0]) is int:
-                pair[0] += next_inc
-                next_inc = 0
+                pair[0] += self.next_inc
+                self.next_inc = 0
 
             if type(pair) is int:
                 pass
 
-            elif not exploded and self.is_regular(pair) and depth >= 3:
+            elif not self.exploded and self.is_regular(pair) and depth >= 3:
                 # if this is first of the pair, increment the next and return prev
                 # or vice-versa
-                prev_inc = pair[0]
-                next_inc = pair[1]
+                self.exploded = True
+                self.prev_inc = pair[0]
+                self.next_inc = pair[1]
                 pairs[i] = 0
 
                 if i == 0:
                     if type(pairs[1]) is int:
-                        pairs[1] += next_inc
-                        next_inc = 0
+                        pairs[1] += self.next_inc
+                        self.next_inc = 0
                     elif type(pairs[1][0]) is int:
-                        pairs[1][0] += next_inc
-                        next_inc = 0
+                        pairs[1][0] += self.next_inc
+                        self.next_inc = 0
                 else:
                     if type(pairs[0]) is int:
-                        pairs[0] += prev_inc
-                        prev_inc = 0
+                        pairs[0] += self.prev_inc
+                        self.prev_inc = 0
                     elif type(pairs[0][0]) is int:
-                        pairs[0][0] += prev_inc
-                        prev_inc = 0
+                        pairs[0][0] += self.prev_inc
+                        self.prev_inc = 0
 
-                return prev_inc, next_inc, True
+                return
 
             else:
-                prev_inc, next_inc, exploded = self.explode(pair, depth+1, exploded, prev_inc, next_inc)
-                if exploded and next_inc == 0 and prev_inc == 0:
-                    return prev_inc, next_inc, True
+                self.__explode(pair, depth+1)
+                if self.exploded and self.next_inc == 0 and self.prev_inc == 0:
+                    return
 
             if i == 1:
                 if type(pairs[0]) is int:
-                    pairs[0] += prev_inc
-                    prev_inc = 0
+                    pairs[0] += self.prev_inc
+                    self.prev_inc = 0
 
             elif i == 0:
                 if type(pairs[1]) is int:
-                    pairs[1] += next_inc
-                    next_inc = 0
+                    pairs[1] += self.next_inc
+                    self.next_inc = 0
 
             if depth == 1:
                 # if get to top and there is no previous, drop value
-                prev_inc = 0
+                self.prev_inc = 0
 
-        return prev_inc, next_inc, exploded
+        return
 
     def split(self, pairs=None):
         pairs = self.number if pairs is None else pairs
@@ -110,23 +121,28 @@ class Snail:
     def reduce(self):
         needs_explode = True
         needs_split = True
-        print("START:", self.number)
+        print("START  :", self.number)
         while needs_explode or needs_split:
-            if needs_explode:
-                a, b, needs_explode = self.explode()
-                print("EXP:  ", self.number)
+            exploded = self.explode()
+            needs_explode = exploded
+            if exploded:
+                print("EXP    :", self.number)
+                needs_split = True
             elif needs_split:
-                needs_split = self.split()
-                print("SPLIT:", self.number)
+                was_split = self.split()
+                needs_split = was_split
+                if was_split:
+                    print("SPLIT  :", self.number)
+                    needs_explode = True
 
     def magnitude(self, pairs=None):
         pairs = self.number if pairs is None else pairs
-
+        mag = 0
         if self.is_regular(pairs):
             return 3*pairs[0] + 2*pairs[1]
         elif type(pairs) is list:
             for i, pair in enumerate(pairs):
-                pairs[i] = self.magnitude(pair)
+                mag += self.magnitude(pair)
 
         return self.magnitude(pairs)
 

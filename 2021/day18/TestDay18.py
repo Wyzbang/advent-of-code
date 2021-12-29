@@ -67,6 +67,7 @@ class TestDay18(unittest.TestCase):
         expected = Snail(after)
 
         was_split = actual.split()
+        print("EXPECT :", expected)
         self.assertEqual(expected, actual)
         return was_split
 
@@ -92,6 +93,7 @@ class TestDay18(unittest.TestCase):
         expected = Snail(after)
 
         actual.reduce()
+        print("EXPECT :", expected)
         self.assertEqual(expected, actual)
 
     def test_reduce(self):
@@ -101,7 +103,7 @@ class TestDay18(unittest.TestCase):
 
     def test_reduce2(self):
         a = [[[[[1, 1], [2, 2]], [3, 3]], [4, 4]], [5, 5]]
-        b = [[[[3,0],[5,3]],[4,4]],[5,5]]
+        b = [[[[3,0],[6,3]],[4,4]],[5,5]]
         self.__test_reduce(a, b)
 
     def test_reduce3(self):
