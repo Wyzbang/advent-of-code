@@ -2,8 +2,13 @@
 """
 https://adventofcode.com/2021/day/18
 """
+import logging
 import math
 from utils.loader import load_lines
+
+logging.basicConfig(level=logging.WARN, format="%(message)s")
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
 
 
 class Snail:
@@ -11,6 +16,9 @@ class Snail:
     Snailfish Number
     """
     def __init__(self, number):
+        self.logger = logging.getLogger(self.__class__.__name__)
+        self.logger.setLevel(logging.DEBUG)
+
         if type(number) is str:
             self.number = eval(number)
         elif type(number) is list:
@@ -121,18 +129,18 @@ class Snail:
     def reduce(self):
         needs_explode = True
         needs_split = True
-        print("START  :", self.number)
+        self.logger.debug("START  : %s", self.number)
         while needs_explode or needs_split:
             exploded = self.explode()
             needs_explode = exploded
             if exploded:
-                print("EXP    :", self.number)
+                self.logger.debug("EXP    : %s", self.number)
                 needs_split = True
             elif needs_split:
                 was_split = self.split()
                 needs_split = was_split
                 if was_split:
-                    print("SPLIT  :", self.number)
+                    self.logger.debug("SPLIT  : %s", self.number)
                     needs_explode = True
 
     def magnitude(self, pairs=None):
@@ -162,26 +170,26 @@ def load(filepath):
 
 def part1(numbers):
     current = numbers[0]
-    print("cur", 0, current)
+    logger.debug("CUR: %d %s", 0, current)
     for i, number in enumerate(numbers[1:]):
         current += number
-        print("sum", i, current)
+        logger.debug("SUM: %d %s", i, current)
         current.reduce()
-        print("red", i, current)
+        logger.debug("RED: %d %s", i, current)
 
     answer = current.magnitude()
     return answer
 
 
 def run():
-    print("Advent of Code 2021 - Day 18")
+    logger.info("Advent of Code 2021 - Day 18")
     numbers = load("sum_example.txt")
 
     # TODO:
     answer1 = part1(numbers)
 
-    print("PART1: ", answer1)
-    print("PART2: ")
+    logger.info("PART1: %d", answer1)
+    logger.info("PART2: ")
 
 
 if __name__ == "__main__":
