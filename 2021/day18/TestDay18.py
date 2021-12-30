@@ -112,11 +112,37 @@ class TestDay18(unittest.TestCase):
         b = [[[[5,0],[7,4]],[5,5]],[6,6]]
         self.__test_reduce(a, b)
 
-    def test_magnitude(self):
-        a = Snail([1,9])
-        self.assertEqual(21, a.magnitude())
-        b = Snail([[9,1],[1,9]])
-        self.assertEqual(129, b.magnitude())
+    def __test_mag(self, a, expected):
+        snail = Snail(a)
+        mag = snail.magnitude()
+        self.assertEqual(expected, mag)
+
+    def test_magnitude1(self):
+        self.__test_mag([1,9], 21)
+
+    def test_magnitude2(self):
+        self.__test_mag([[9,1],[1,9]], 129)
+
+    def test_magnitude3(self):
+        self.__test_mag([[1,2],[[3,4],5]], 143)
+
+    def test_magnitude3(self):
+        self.__test_mag([[[[0,7],4],[[7,8],[6,0]]],[8,1]], 1384)
+
+    def test_magnitude4(self):
+        self.__test_mag([[[[1,1],[2,2]],[3,3]],[4,4]], 445)
+
+    def test_magnitude5(self):
+        self.__test_mag([[[[3,0],[5,3]],[4,4]],[5,5]], 791)
+
+    def test_magnitude6(self):
+        self.__test_mag([[[[5,0],[7,4]],[5,5]],[6,6]], 1137)
+
+    def test_magnitude7(self):
+        self.__test_mag([[[[8,7],[7,7]],[[8,6],[7,7]]],[[[0,7],[6,6]],[8,7]]], 3488)
+
+    def test_magnitude8(self):
+        self.__test_mag([[[[6,6],[7,6]],[[7,7],[7,0]]],[[[7,7],[7,7]],[[7,8],[9,9]]]], 4140)
 
 
 if __name__ == '__main__':

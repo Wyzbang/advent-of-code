@@ -136,15 +136,18 @@ class Snail:
                     needs_explode = True
 
     def magnitude(self, pairs=None):
-        pairs = self.number if pairs is None else pairs
-        mag = 0
-        if self.is_regular(pairs):
-            return 3*pairs[0] + 2*pairs[1]
-        elif type(pairs) is list:
-            for i, pair in enumerate(pairs):
-                mag += self.magnitude(pair)
+        return self.__magnitude(self.number)
 
-        return self.magnitude(pairs)
+    def __magnitude(self, items):
+        tmp = [0, 0]
+        for i, item in enumerate(items):
+            multi = 3 if i == 0 else 2
+            if type(item) is int:
+                tmp[i] = multi * item
+            else:
+                tmp[i] = multi * self.__magnitude(item)
+
+        return sum(tmp)
 
 
 def load(filepath):
