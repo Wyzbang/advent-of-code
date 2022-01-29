@@ -7,6 +7,35 @@ from day18 import Snail
 
 
 class TestDay18(unittest.TestCase):
+    def __test_increment(self, a, indexes, amount, b):
+        sa = Snail(a)
+        sa.increment(indexes, amount)
+        expected = Snail(b)
+        self.assertEqual(expected, sa)
+
+    def test_increment1(self):
+        a = [[1,2],3]
+        indexes = [0,0]
+        amount = 1
+        b = [[2,2],3]
+
+        self.__test_increment(a,indexes,amount,b)
+
+    def test_increment2(self):
+        a = [[1,2],3]
+        indexes = [0,1]
+        amount = 1
+        b = [[1,3],3]
+
+        self.__test_increment(a,indexes,amount,b)
+
+    def test_increment3(self):
+        a = [[1,2],3]
+        indexes = [1]
+        amount = 1
+        b = [[1,2],4]
+
+        self.__test_increment(a,indexes,amount,b)
 
     def __test_sum(self, a, b, exp):
         sa = Snail(a)
@@ -110,6 +139,11 @@ class TestDay18(unittest.TestCase):
         # [[[[[1, 1], [2, 2]], [3, 3]], [4, 4]], [5, 5]] + [6,6]
         a = [[[[0, [5, 3]], [4, 4]], [5, 5]], [6, 6]]
         b = [[[[5,0],[7,4]],[5,5]],[6,6]]
+        self.__test_reduce(a, b)
+
+    def test_reduce4(self):
+        a = [[[[0, [4, 5]], [0, 0]], [[[4, 5], [2, 6]], [9, 5]]], [7, [[[3, 7], [4, 3]], [[6, 3], [8, 8]]]]]
+        b = [[[[4,0],[5,4]],[[7,7],[6,0]]],[[8,[7,7]],[[7,9],[5,0]]]]
         self.__test_reduce(a, b)
 
     def __test_mag(self, a, expected):

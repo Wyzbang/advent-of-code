@@ -43,6 +43,13 @@ class Snail:
     def __str__(self):
         return self.number.__str__()
 
+    def increment(self, indexes, amount):
+        tmp = self.number
+        for index in indexes[:-1]:
+            tmp = tmp[index]
+
+        tmp[indexes[-1]] += amount
+
     @staticmethod
     def is_regular(pair):
         return type(pair) is list and type(pair[0]) is int and type(pair[1]) is int
@@ -51,64 +58,44 @@ class Snail:
         self.exploded = False
         self.next_inc = 0
         self.prev_inc = 0
+        self.prev = None
         self.__explode(self.number)
         return self.exploded
 
-    def __explode(self, pairs=None, depth=0):
+    def __explode(self, pairs=None, depth=0, path=[]):
 
         for i, pair in enumerate(pairs):
 
-            if type(pair) is list and type(pair[0]) is int:
-                pair[0] += self.next_inc
+            if type(pair) is list and type(pair[i]) is int:
+                pair[i] += self.next_inc
                 self.next_inc = 0
 
             if type(pair) is int:
-                pass
+                self.prev = path + [i]
 
             elif not self.exploded and self.is_regular(pair) and depth >= 3:
                 # if this is first of the pair, increment the next and return prev
                 # or vice-versa
                 self.exploded = True
-                self.prev_inc = pair[0]
+                prev_inc = pair[0]
                 self.next_inc = pair[1]
                 pairs[i] = 0
+
+                if self.prev is not None:
+                    self.increment(self.prev, prev_inc)
 
                 if i == 0:
                     if type(pairs[1]) is int:
                         pairs[1] += self.next_inc
                         self.next_inc = 0
-                    elif type(pairs[1][0]) is int:
-                        pairs[1][0] += self.next_inc
-                        self.next_inc = 0
-                else:
-                    if type(pairs[0]) is int:
-                        pairs[0] += self.prev_inc
-                        self.prev_inc = 0
-                    elif type(pairs[0][0]) is int:
-                        pairs[0][0] += self.prev_inc
-                        self.prev_inc = 0
-
-                return
 
             else:
-                self.__explode(pair, depth+1)
-                if self.exploded and self.next_inc == 0 and self.prev_inc == 0:
-                    return
-
-            if i == 1:
-                if type(pairs[0]) is int:
-                    pairs[0] += self.prev_inc
-                    self.prev_inc = 0
-
-            elif i == 0:
-                if type(pairs[1]) is int:
-                    pairs[1] += self.next_inc
+                self.__explode(pair, depth+1, path + [i])
+                """
+                if type(pair) is list and type(pair[1]) is int:
+                    pair[1] += self.next_inc
                     self.next_inc = 0
-
-            if depth == 1:
-                # if get to top and there is no previous, drop value
-                self.prev_inc = 0
-
+                """
         return
 
     def split(self, pairs=None):
