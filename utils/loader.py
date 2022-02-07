@@ -10,6 +10,11 @@ def load_lines(filepath):
     return lines
 
 
+def load_chars(filepath):
+    lines = load_lines(filepath)
+    return [char for char in lines[0]]
+
+
 def load_ints_csv(filepath):
     """
     Load a from file with single line of comma seperated ints
