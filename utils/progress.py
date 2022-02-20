@@ -1,6 +1,20 @@
 import time
 
 
+class Thermometer:
+    symbols = ['\\', '|', '/', '-']
+
+    def __init__(self, max):
+        self.max = float(max)
+
+    def display(self, index):
+        percent = int(float(index) / self.max * 100.0)
+        j = int(percent / 10)
+        dots = "." * (10-j)
+        hash = "#" * j
+        print("%s%s% d%%" % (hash, dots, percent), end="\r")
+
+
 class Spinner:
     symbols = ['\\', '|', '/', '-']
 
