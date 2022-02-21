@@ -33,22 +33,29 @@ class Action:
         self.end = [int(i) for i in coords[1].split(',')]
 
 
-class Lights(Grid):
+class Lights():
 
     def __init__(self):
-        self.grid = [[False for i in range(1000)] for j in range(1000)]
+        self.a = Grid.initialize(1000, 1000, False)
+        self.b = Grid.initialize(1000, 1000, 0)
 
     def _process(self, action):
         for i in range(action.start[0], action.end[0] + 1):
             for j in range(action.start[1], action.end[1] + 1):
                 if action.action == ActionType.ON:
-                    value = True
+                    self.a.set(i, j, True)
+                    value = self.b.get(i, j) + 1
+                    self.b.set(i, j, value)
                 elif action.action == ActionType.OFF:
-                    value = False
+                    self.a.set(i, j, False)
+                    value = self.b.get(i, j) - 1
+                    value = value if value >=0 else 0
+                    self.b.set(i, j, value)
                 elif action.action == ActionType.TOGGLE:
-                    value = not self.get(i, j)
-
-                self.set(i, j, value)
+                    value = not self.a.get(i, j)
+                    self.a.set(i, j, value)
+                    value = self.b.get(i, j) + 2
+                    self.b.set(i, j, value)
 
     def process(self):
         actions = []
@@ -66,8 +73,8 @@ def run():
     lights = Lights()
     lights.process()
 
-    print("PART1: ", lights.count(True))
-    print("PART2: ")
+    print("PART1: ", lights.a.count(True))
+    print("PART2: ", lights.b.sum())
 
 
 if __name__ == "__main__":

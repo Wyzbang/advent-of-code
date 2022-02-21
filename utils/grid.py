@@ -103,7 +103,14 @@ class Grid:
                 if check == value:
                     number += 1
         return number
-
+    
+    def sum(self):
+        result = 0
+        for row in self.grid:
+            for value in row:
+                result += value
+        return result
+    
     def dump(self, true="#", false="."):
         """
         Dumps grid
